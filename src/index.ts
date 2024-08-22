@@ -10,4 +10,5 @@ async function main(): Promise<void> {
   await Server.start(server)
 }
 
-main().catch(logger.error)
+//main().catch(logger.error)
+main().catch((err) => logger.error(err))
