@@ -1,6 +1,6 @@
 import { appConfig } from "@/app/config"
 import { db, Paginated } from "@/core/database"
-import { Password, User, UserRole } from "@prisma/client"
+import { Password, User, UserRole, userStatus } from "@prisma/client"
 import { UpdateUserProfile, CreateUser } from "./userSchema"
 import { Password as Pwd } from "@/core/helpers"
 
@@ -72,6 +72,7 @@ export const UserRepository = {
         email: args.email,
         name: args.name,
         role,
+        profilePicture:args.profilePicture,
         password: {
           create: {
             hash: await Pwd.hash(args.password),
@@ -101,6 +102,16 @@ export const UserRepository = {
         name: data.name,
         phone: data.phone,
         mobile: data.mobile,
+        status:data.status as userStatus,
+        profilePicture: data.profilePicture,
+        role: data.role as UserRole,
+        ...(data.password && {   
+          password: {
+            update: {
+              hash: await Pwd.hash(data.password),
+            },
+          },
+        }),
       },
     })
   },

@@ -1,6 +1,7 @@
 import { FastifyRequest } from "fastify"
 import { AuthException } from "@/core/entities/exceptions"
 import { Auth } from "@/core/helpers"
+import { UserRepository } from "@/app/modules/user/userRepository"
 
 export const validateToken = async (req: FastifyRequest) => {
   const token = parseBearerToken(req)
@@ -9,6 +10,10 @@ export const validateToken = async (req: FastifyRequest) => {
   }
 
   const { userId, userRole } = await Auth.validateLoginAuthToken(token)
+    const user = await UserRepository.findById(userId)
+  if (!user || user.status === "INACTIVE") {
+    throw AuthException("token expired due to inactive user");
+  }
 
   /* store id of the validated user on the request object */
   req.requestContext.set("userId" as never, userId as never)

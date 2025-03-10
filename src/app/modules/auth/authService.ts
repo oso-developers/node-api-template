@@ -23,6 +23,12 @@ export const AuthService = {
         email: args.email,
         message: "failed login against disabled account",
       })
+      
+    if (user.status === "INACTIVE")
+      throw BadRequestException("user account is inactive", {
+        email: args.email,
+        message: "failed login against inactive account",
+      })
 
     /** validate the actual password */
     const isValid = await Password.verify(user.password.hash, args.password)

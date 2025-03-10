@@ -15,9 +15,14 @@ export type ListUsersQuery = FromSchema<typeof ListUsersQuerySchema>
 export const UpdateUserProfileSchema = {
   type: "object",
   properties: {
+    updateUserId: { type: "number" },
     name: { type: "string" },
     phone: { type: "string" },
     mobile: { type: "string" },
+    status: { type: "string" },
+    profilePicture: { type: "string" },
+    role: { type: "string" },
+    password:{ type: "string" },
   },
   required: ["name"],
   additionalProperties: false,
@@ -28,8 +33,10 @@ export type UpdateUserProfile = FromSchema<typeof UpdateUserProfileSchema>
 export const CreateUserSchema = {
   type: "object",
   properties: {
+    
     name: { type: "string" },
     email: { type: "string" },
+    profilePicture: { type: "string" },
     password: { type: "string", minLength: authConfig.password.minLength },
     confirmPassword: { type: "string" },
   },

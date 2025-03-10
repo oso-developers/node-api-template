@@ -14,7 +14,8 @@
     "fmt": "npx prettier --write ./src/",
     "check": "npm run lint && npm run fmt",
     "db:migrate": "npx prisma migrate dev",
-    "db:seed": "npx prisma db seed"
+    "db:seed": "npx prisma db seed",
+    "createapi":""
   },
   "_moduleAliases": {
     "@": "build"
@@ -92,3 +93,4 @@
     "uuid": "^9.0.0"
   }
 }
+
