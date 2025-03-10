@@ -15,7 +15,7 @@
     "check": "npm run lint && npm run fmt",
     "db:migrate": "npx prisma migrate dev",
     "db:seed": "npx prisma db seed",
-    "createapi":""
+    "createApi" : "node ./src/app/modules/createAPI.ts"
   },
   "_moduleAliases": {
     "@": "build"

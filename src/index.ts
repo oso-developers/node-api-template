@@ -4,7 +4,7 @@ import "@/app/config"
 
 import { Server } from "@/core/server"
 import { logger } from "./core/server/logger"
-import { db } from "./core/database"
+// import { db } from "./core/database"
 
 async function main(): Promise<void> {
 
@@ -13,4 +13,4 @@ async function main(): Promise<void> {
   await Server.start(server)
 }
 
-main().catch(logger.error)
+main().catch((err) => logger.error(err))
