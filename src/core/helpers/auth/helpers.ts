@@ -67,10 +67,10 @@ export function validateGeneralToken(
  */
 export function validateLoginToken(
   type: keyof typeof authConfig.tokens,
-): (token: string) => Promise<{ userId: number; userRole: string }> {
+): (token: string) => Promise<{ userId: number; userRole: string, userStatus: string}> {
   return async (
     token: string,
-  ): Promise<{ userId: number; userRole: string }> => {
+  ): Promise<{ userId: number; userRole: string, userStatus: string }> => {
     const jwtPayload = await JWT.validate(authConfig.jwt.secret, token)
     if (!jwtPayload) {
       throw ForbiddenException("invalid or expired token")
@@ -80,6 +80,7 @@ export function validateLoginToken(
       sub: number
       scope: string
       role: string
+      status: string
     }
     const { scope } = authConfig.tokens[type]
 
@@ -88,6 +89,7 @@ export function validateLoginToken(
       !result.sub ||
       !result.role ||
       !result.scope ||
+      !result.status ||
       result.scope !== scope
     ) {
       throw BadRequestException("invalid password token")
@@ -96,6 +98,7 @@ export function validateLoginToken(
     return {
       userId: result.sub,
       userRole: result.role,
+      userStatus: result.status
     }
   }
 }
