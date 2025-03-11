@@ -12,9 +12,9 @@ export const validateToken = async (req: FastifyRequest) => {
   const { userId, userRole } = await Auth.validateLoginAuthToken(token)
     const user = await UserRepository.findById(userId)
   if (!user || user.status === "INACTIVE") {
-    throw AuthException("token expired due to inactive user");
+    throw AuthException("Token expired");
   }
-
+  
   /* store id of the validated user on the request object */
   req.requestContext.set("userId" as never, userId as never)
   req.requestContext.set("userRole" as never, userRole as never)
