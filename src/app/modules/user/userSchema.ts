@@ -37,6 +37,7 @@ export const CreateUserSchema = {
     name: { type: "string" },
     email: { type: "string" },
     profilePicture: { type: "string" },
+    role: { type: "string" },
     password: { type: "string", minLength: authConfig.password.minLength },
     confirmPassword: { type: "string" },
   },
