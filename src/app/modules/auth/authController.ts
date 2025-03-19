@@ -30,4 +30,13 @@ export const AuthController: Record<string, RouteShorthandOptionsWithHandler> =
         return await AuthService.refreshAuthToken(userId)
       },
     },
+        validateToken: {
+      preValidation: [validateToken],
+      handler: async (req) => {
+        return {
+          message: "token is valid",
+          isValid: true,
+        }
+      },
+    },
   }

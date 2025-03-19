@@ -75,13 +75,13 @@ export function validateLoginToken(
     if (!jwtPayload) {
       throw ForbiddenException("invalid or expired token")
     }
-
+console.log(jwtPayload)
     const result = jwtPayload as {
       sub: number
       scope: string
       role: string
       status: string
-    }
+    }  
     const { scope } = authConfig.tokens[type]
 
     if (
@@ -89,7 +89,7 @@ export function validateLoginToken(
       !result.sub ||
       !result.role ||
       !result.scope ||
-      !result.status ||
+      // !result.status ||
       result.scope !== scope
     ) {
       throw BadRequestException("invalid password token")

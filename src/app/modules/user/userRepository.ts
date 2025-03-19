@@ -3,9 +3,11 @@ import { db, Paginated } from "@/core/database"
 import { Password, User, UserRole, userStatus } from "@prisma/client"
 import { UpdateUserProfile, CreateUser } from "./userSchema"
 import { Password as Pwd } from "@/core/helpers"
+import { StorageService } from "@/core/services/StorageService"
+
 
 export const UserRepository = {
-  async listUsers(
+  async listUsers(  
     page: number = 1,
     query: string | undefined = undefined,
   ): Promise<Paginated<User>> {
@@ -67,12 +69,20 @@ export const UserRepository = {
   },
 
   async createUser(args: CreateUser, role: UserRole): Promise<User> {
+    let profileImage = undefined
+    if (args.profilePicture) {
+      const filename = Date.now().toString() + ".png"
+      profileImage = await StorageService.uploadBase64(
+        filename,
+        args.profilePicture ? args.profilePicture : "",
+      )
+    }
     return db.user.create({
       data: {
         email: args.email,
         name: args.name,
         role,
-        profilePicture:args.profilePicture,
+        profilePicture: profileImage || profileImage,
         password: {
           create: {
             hash: await Pwd.hash(args.password),
@@ -94,6 +104,14 @@ export const UserRepository = {
   },
 
   async updateUserProfile(user: User, data: UpdateUserProfile): Promise<User> {
+    let profileImage = undefined
+    if (data.profilePicture) {
+      const filename = Date.now().toString() + ".png"
+      profileImage = await StorageService.uploadBase64(
+        filename,
+        data.profilePicture ? data.profilePicture : "",
+      )
+    }
     return db.user.update({
       where: {
         id: user.id,
@@ -103,7 +121,7 @@ export const UserRepository = {
         phone: data.phone,
         mobile: data.mobile,
         status:data.status as userStatus,
-        profilePicture: data.profilePicture,
+        profilePicture: profileImage || profileImage,
         role: data.role as UserRole,
         ...(data.password && {   
           password: {
