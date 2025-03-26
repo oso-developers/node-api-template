@@ -26,7 +26,6 @@ export class RequestPasswordResetEvent implements IEvent {
       subject: "Hello from Resend",
       html: email.html(),
     })
-// console.log(email.html())
     EmailService.instance.sendEmail(this.user.email, email)
     logger.info(
       { email: this.user.email },

@@ -11,7 +11,6 @@ import { error } from "console"
 export const ForgotPasswordService = {
   async requestPasswordReset(args: RequestPasswordReset): Promise<void> {
     const user = await UserRepository.findByEmail(args.email)
-    // console.log(user)
     if (!user) {
       logger.info(
         { email: args.email },

@@ -1,25 +1,29 @@
 import { FastifyRequest } from "fastify"
 import { AuthException } from "@/core/entities/exceptions"
 import { Auth } from "@/core/helpers"
+import { db } from "@/core/database"
 
 export const validateToken = async (req: FastifyRequest) => {
   const token = parseBearerToken(req)
   if (!token) {
     throw AuthException("invalid bearer token")
   }
-  const { userId, userRole, userStatus } = await Auth.validateLoginAuthToken(token)
-  console.log("Auth Response:", { userId, userRole, userStatus });
+  const { userId, userRole } = await Auth.validateLoginAuthToken(token)
+  const user = await db.user.findUnique({
+    where: {
+      id: userId
+    }
+  })
+  if (!user) throw new Error("token expired due to inactive user")
 
-  // const user = await UserRepository.findById(userId)
-  if (!userId || userStatus === "INACTIVE") {
+  if (!userId || user?.status === "INACTIVE") {
     throw AuthException("token expired due to inactive user")
   }
 
- 
-  /* store id of the validated user on the request object */   
+  /* store id of the validated user on the request object */
   req.requestContext.set("userId" as never, userId as never)
   req.requestContext.set("userRole" as never, userRole as never)
-}     
+}
 
 function parseBearerToken(req: FastifyRequest): string | undefined {
   const header = req.headers["authorization"]
