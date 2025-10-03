@@ -6,6 +6,7 @@ import { ResetForgottenPassword } from "./forgotPasswordSchema"
 import { AuthException, BadRequestException } from "@/core/entities/exceptions"
 import { PasswordRepository } from "@/app/modules/password/passwordRepository"
 import { RequestPasswordResetEvent } from "./events/requestPasswordResetEvent"
+import { error } from "console"
 
 export const ForgotPasswordService = {
   async requestPasswordReset(args: RequestPasswordReset): Promise<void> {
@@ -15,10 +16,11 @@ export const ForgotPasswordService = {
         { email: args.email },
         "password reset request for non-existent user",
       )
-      return
+      throw new Error("password reset request for non-existent user")
     }
 
     new RequestPasswordResetEvent(user).process()
+   
   },
 
   async resetForgottenPassword(args: ResetForgottenPassword): Promise<void> {

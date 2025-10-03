@@ -72,8 +72,11 @@ export const UserController: Record<string, RouteShorthandOptionsWithHandler> =
         body: UpdateUserProfileSchema,
       },
       handler: async (req) => {
-        const body = req.body as UpdateUserProfile
-        const { userId } = requestMeta(req)
+        const { updateUserId, ...body} = req.body as UpdateUserProfile
+        let { userId } = requestMeta(req)
+
+        if(updateUserId != undefined && updateUserId != null) userId = updateUserId;
+
         const updatedUser = await UserService.updateUserProfile(userId, body)
         return {
           message: "user profile updated successfully",

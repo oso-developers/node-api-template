@@ -4,6 +4,6 @@ import { AuthController } from "./authController"
 export const AuthRouter: FastifyPlugin = (app, _opts, next) => {
   app.post("/login", AuthController.login)
   app.get("/refresh-token", AuthController.refreshAuthToken)
-
+  app.get("/validate-token", AuthController.validateToken)
   next()
 }

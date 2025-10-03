@@ -24,6 +24,12 @@ export const Server = {
       .register(fastifyRequestContextPlugin, requestContextPluginOptions)
       .register(routesPlugin.plug())
 
+    /* Global hook to clean query, body, and params */
+    app.addHook("preValidation", async (req) => {
+      req.query = cleanData(req.query)
+      req.body = cleanData(req.body)
+      req.params = cleanData(req.params)
+    })
     return app
   },
 
@@ -50,4 +56,23 @@ export const Server = {
 
     return instance
   },
+}
+
+
+/* Utility function to clean request data */
+const cleanData = (data: unknown): Record<string, unknown> | undefined => {
+  if (!data || typeof data !== "object") return undefined
+
+  return Object.fromEntries(
+    Object.entries(data as Record<string, unknown>).filter(([, v]) =>
+      v !== null &&
+      v !== undefined &&
+      v !== "undefined" &&
+      v !== "" &&
+      !Number.isNaN(v) &&
+      !(Array.isArray(v) && v.length === 0) &&  // Remove empty arrays
+      !(typeof v === "object" && Object.keys(v).length === 0) && // Remove empty objects
+      !(typeof v === "string" && v.trim() === "") // Remove whitespace-only strings
+    )
+  )
 }

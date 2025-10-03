@@ -31,9 +31,9 @@ export const UserService = {
       })
     }
 
-    return await UserRepository.createUser(args, UserRole.USER)
+    let userRole: UserRole = UserRole[args.role as keyof typeof UserRole]
+    return await UserRepository.createUser(args, userRole)
   },
-
   async setUserStatus(args: SetUserStatus): Promise<boolean> {
     const user = await UserRepository.findById(args.userId)
     if (!user) {

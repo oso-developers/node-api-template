@@ -7,6 +7,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum userStatus {
+  ACTIVE
+  INACTIVE
+}
+
 enum UserRole {
   ADMIN
   USER
@@ -19,12 +24,14 @@ model Password {
 }
 
 model User {
-  id                 Int             @id @default(autoincrement())
-  email              String          @unique
-  name               String
-  phone              String?
-  mobile             String?
-  password           Password?
-  approved           Boolean         @default(true)
-  role               UserRole        @default(USER)
+  id             Int        @id @default(autoincrement())
+  email          String     @unique
+  name           String
+  phone          String?
+  mobile         String?
+  password       Password?
+  profilePicture String?
+  approved       Boolean    @default(true)
+  role           UserRole   @default(USER)
+  status         userStatus @default(ACTIVE)
 }

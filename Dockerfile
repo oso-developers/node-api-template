@@ -10,4 +10,4 @@ RUN npm run build
 ENV NODE_ENV=production
 
 CMD ["npm", "run", "start:prod"]
-EXPOSE 5000
+EXPOSE Number(process.env.PORT) ?? 5000
